@@ -29,7 +29,7 @@ def part_1(input):
 
 
 def run():
-    file = open('../Inputs/day5.txt')
+    file = open('Inputs/day5.txt')
     input = file.read().split('\n')
     count = part_1(input)
     # count = part_2(input)

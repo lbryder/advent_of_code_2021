@@ -2,7 +2,7 @@ from collections import Counter
 
 
 def day_6():
-    file = open('../Inputs/day6.txt')
+    file = open('Inputs/day6.txt')
     input = file.read().split('\n')
     # count = part_1(input[0])
     count = part_2(input[0])

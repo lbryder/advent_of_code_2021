@@ -2,7 +2,7 @@ from collections import Counter, defaultdict
 
 
 def run():
-    file = open('../Inputs/day14.txt')
+    file = open('Inputs/day14.txt')
     input = file.read().splitlines()
     count = part_1(input)
 

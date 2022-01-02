@@ -1,5 +1,5 @@
-def day_1(name):
-    file = open('../Inputs/day1.txt')
+def run():
+    file = open('Inputs/day1.txt')
     input = file.read().split('\n')
     # count = part_1(input)
     count = part_2_real(input)

@@ -90,7 +90,7 @@ def get_Oxy(input):
 
 
 def run():
-    file = open('../Inputs/day3.txt')
+    file = open('Inputs/day3.txt')
     input = file.read().split('\n')
     # count = part_1(input)
     count = part_2(input)

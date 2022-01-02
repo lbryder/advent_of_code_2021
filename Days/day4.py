@@ -69,7 +69,7 @@ def find_winner(boards, draws):
 
 
 def run():
-    file = open('../Inputs/day4.txt')
+    file = open('Inputs/day4.txt')
     input = file.read().split('\n')
     count = part_1(input)
     # count = part_2(input)

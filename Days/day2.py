@@ -20,8 +20,8 @@ def part_2(input):
 
     return hori * depth
 
-def day_2():
-    file = open('../Inputs/day2.txt')
+def run():
+    file = open('Inputs/day2.txt')
     input = file.read().split('\n')
     # count = part_1(input)
     count = part_2(input)
