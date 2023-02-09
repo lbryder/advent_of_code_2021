@@ -11,25 +11,25 @@ def fold_points_2(point_2, fold):
     num = fold[1]
     new_points = set()
     for p in point_2:
-        x, y = 0, 0
+        x, y = p
         if axis == 'x':
-            p_x = p[0]
-            p_y = p[1]
-            if p_x > num:
-                x = 2 * num - p_x
-            else:
-                x = p_x
-
-            y = p_y
+            # p_x = p[0]
+            # p_y = p[1]
+            if x > num:
+                x = 2 * num - x
+            # else:
+            #     x = p_x
+            #
+            # y = p_y
         else:
-            p_x = p[0]
-            p_y = p[1]
-            if p_y > num:
-                y = 2 * num - p_y
-            else:
-                y = p_y
+            # p_x = p[0]
+            # p_y = p[1]
+            if y > num:
+                y = 2 * num - y
+            # else:
+            #     y = p_y
 
-            x = p_x
+            # x = p_x
 
         new_points.add((x, y))
     return new_points

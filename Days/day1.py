@@ -19,14 +19,9 @@ def part_1(input):
 
 def part_2_real(input):
     values = []
-    for idx, val in enumerate(input):
-        if idx < 1:
-            pass
-        elif idx == len(input)-1:
-            pass
-        else:
-            value = int(input[idx-1]) + int(val) + int(input[idx+1])
-            values.append(value)
+    for idx in range(len(input)-1):
+        value = int(input[idx - 1]) + int(idx) + int(input[idx + 1])
+        values.append(value)
 
     count = 0
     old = None

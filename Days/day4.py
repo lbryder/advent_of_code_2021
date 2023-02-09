@@ -7,12 +7,12 @@ def part_1(input):
         line = input[i]
         board_row = []
         for num in line.split(" "):
-            if (len(num) >0):
-                board_row.append([int(num.strip()),0])
+            if (len(num) > 0):
+                board_row.append([int(num.strip()), 0])
         if not len(board_row) < 1:
             temp_board.append(board_row)
 
-        if (i+1 == len(input) or len(input[i+1]) == 0):
+        if (i + 1 == len(input) or len(input[i + 1]) == 0):
             boards.append(temp_board)
             temp_board = []
 
@@ -48,28 +48,24 @@ def find_winner(boards, draws):
     all_winner = []
     winner_boards = []
     for d, draw in enumerate([int(d) for d in draws.split(",")]):
-        print(draw)
+        # print(draw)
         for b, board in enumerate(boards):
             for board_row in board:
-                if (len(board_row) < 2):
-                    print(board_row)
-                for i,field in enumerate(board_row):
+                for i, field in enumerate(board_row):
                     field_val = field[0]
-                    if (field_val == draw):
-                        board_row[i] = [field_val, 1]
+                    if field_val == draw:
+                        field[1] = 1
             if b not in winner_boards:
                 win = checkwin(board, draw)
-                if (win > 0):
+                if win > 0:
                     winner_boards.append(b)
                     all_winner.append([b, d, win])
 
-    return all_winner[len(all_winner)-1]
-
-
+    return all_winner[-1][2]
 
 
 def run():
-    file = open('Inputs/day4.txt')
+    file = open('../Inputs/day4.txt')
     input = file.read().split('\n')
     count = part_1(input)
     # count = part_2(input)
@@ -77,3 +73,5 @@ def run():
     print(f'{count}')
 
 
+if __name__ == '__main__':
+    run()

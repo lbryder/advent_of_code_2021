@@ -5,66 +5,106 @@ def run():
     input_name = 'day16.txt'
     file = open('Inputs/%s' % input_name)
     input = file.read().splitlines()
-    count = part_1(input)
+    count = part_1(input[0])
 
     print(f'{count}')
 
 
 def part_1(input):
-    risks = []
-    for line in input:
-        risk_line = [int(v) for v in line]
-        risks.append(risk_line)
+    number_of_bits = len(input) * 4
+    binary = bin(int(input, 16))[2:]
+    bits = binary.zfill(number_of_bits)
 
-    no_of_rows = len(risks)
-    no_of_cols = len(risks[no_of_rows - 1])
+    digits_bin = parse_packet(bits)
 
-    multi_factor = 5
-    big_risks = [[] for i in range(no_of_rows*multi_factor)]
-    for i in range(0, multi_factor):
-        for j in range(0, multi_factor):
-            for x in range(no_of_rows):
-                add_line = [trans(v+i+j) for v in risks[x]]
-                big_risks[x + i * no_of_rows].extend(add_line)
-
-    sums = calc_risk_sums(big_risks)
-    no_of_rows_big = len(sums)
-    no_of_cols_big = len(sums[no_of_rows_big - 1])
-
-    # NOTE _end ups taking 15 sec for a 100x100 input. To improve, ensure to go through points with lowest dist first. End when encountering target.
-    return sums[no_of_rows_big - 1][no_of_cols_big - 1] - sums[0][0]
+    return digits_bin
 
 
-def calc_risk_sums(risks):
-    new_points = [(0, 0)]
-    sums = []
-    for line in risks:
-        sums.append([0 for v in line])
-
-    no_of_rows = len(risks)
-    while len(new_points) > 0:
-        to_check = new_points.pop(0)
-        x_0 = to_check[0]
-        y_0 = to_check[1]
-        adjacents = []
-        for i in range(-1, 2):
-            adjacents.append((x_0 + i, y_0))
-            adjacents.append((x_0, y_0 + i))
-
-        for x, y in adjacents:
-            if -1 < x < no_of_rows and -1 < y < len(risks[x]):
-                point = risks[x][y]
-                curr_risk = sums[x_0][y_0]
-                new_risk = curr_risk + point
-                existing_risk = sums[x][y]
-                if existing_risk == 0 or existing_risk > new_risk:
-                    sums[x][y] = new_risk
-                    new_points.append((x, y))
-
-    return sums
-
-def trans(v):
-    if v > 9:
-        return v % 9
+def parse_packet(bin_string):
+    vers = int(bin_string[:3], 2)
+    type_int = int(bin_string[3:6], 2)
+    rest_string = bin_string[6:]
+    val = 1 if type_int == 1 else 0
+    if type_int == 4:
+        value = parseValue(rest_string)
+        val = value[0]
+        rest_string = value[1]
     else:
-        return v
+        len_type = int(rest_string[0])
+        if len_type == 0:
+            pack_len = 15
+            len_end = 1 + pack_len
+            total_len = int(rest_string[1:len_end], 2)
+            rest_string = rest_string[len_end:]
+            stop_length = len(rest_string) - total_len
+            while len(rest_string) > stop_length:
+                res = parse_packet(rest_string)
+                vers += res[0]
+                val = calc_val(val, type_int, res[2])
+                rest_string = res[3]
+
+
+        else:
+            pack_len = 11
+            len_bit_start = 1
+            len_end = len_bit_start + pack_len
+            num_of_sub = int(rest_string[len_bit_start:len_end], 2)
+            rest_string = rest_string[len_end:]
+            for i in range(num_of_sub):
+                res = parse_packet(rest_string)
+                rest_string = res[3]
+                val = calc_val(val, type_int, res[2])
+                vers += res[0]
+
+    return [vers, type_int, val, rest_string]
+
+
+def parseValue(bin_string):
+    digits = ""
+    i = 0
+    while i < len(bin_string):
+        is_last_digit = bin_string[i] == "0"
+        digit_string = bin_string[i + 1:i + 5]
+        digits += digit_string
+        if is_last_digit:
+            value = int(digits, 2)
+            return [value, bin_string[i+5:]]
+        else:
+            i += 5
+    return [0, ""]
+
+def calc_val(curr_val, type, new_val):
+    if type == 0:
+        result_val = curr_val + new_val
+    elif type == 1:
+        result_val = curr_val * new_val
+    elif type == 2:
+        if curr_val > 0:
+            result_val = min(curr_val, new_val)
+        else:
+            result_val = new_val
+    elif type == 3:
+        result_val = max(curr_val, new_val)
+    elif type == 5:
+        if curr_val == 0:
+            result_val = new_val
+        elif curr_val > new_val:
+            result_val = 1
+        else:
+            result_val = 0
+    elif type == 6:
+        if curr_val == 0:
+            result_val = new_val
+        elif curr_val < new_val:
+            result_val = 1
+        else:
+            result_val = 0
+    elif type == 7:
+        if curr_val == 0:
+            result_val = new_val
+        elif curr_val == new_val:
+            result_val = 1
+        else:
+            result_val = 0
+
+    return result_val

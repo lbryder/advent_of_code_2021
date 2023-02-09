@@ -1,9 +1,10 @@
 from timeit import default_timer as timer
 
-from Days import day15
+#from AOC_2022.Days import day1
+from Days import day13
 
 if __name__ == '__main__':
     start = timer()
-    day15.run()
+    day13.run()
     end = timer()
     print(f'Time spent: {end - start}')
